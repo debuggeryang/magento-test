@@ -69,3 +69,4 @@ atlassian*
 .DS_Store
 
 /app/code/**
+/pestle.phar
