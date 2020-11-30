@@ -1,0 +1,30 @@
+.order-track-wrapper {
+    margin-top: 2em;
+}
+#order-track-dialog {
+    padding-top: 50vw;
+    width: 100%;
+    position: relative;
+}
+#order-track-map {
+    position:absolute;
+    top: 0; 
+    bottom: 0; 
+    width: 100%;
+}
+.carrier {
+    background: url('../images/carrier.png');
+    background-size: cover;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.destination {
+    background: url('../images/marker.png');
+    background-size: cover;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    cursor: pointer;
+}
