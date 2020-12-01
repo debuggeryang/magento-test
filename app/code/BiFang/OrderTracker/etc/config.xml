@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <carriers>
+        <shipping>
             <ordertracker>
                 <active>1</active>
                 <cut_off>14</cut_off>
                 <mapbox_key>pk.eyJ1IjoiZGVidWdnZXJ5YW5nIiwiYSI6ImNraTA4ZmpzOTFiYmIycXRob2wxajlwOW8ifQ.8qdYPNJ_YnIExDIdleL5Eg</mapbox_key>
             </ordertracker>
-        </carriers>
+        </shipping>
     </default>
 </config>
