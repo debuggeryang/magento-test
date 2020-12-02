@@ -6,15 +6,24 @@
 #order-track-dialog {
     position: relative;
 }
-#order-track-dialog.col-12 {
-    padding-top: 100vw;
+@media screen and (max-width: 576px) {
+    #order-track-dialog {
+        padding-top: 100vw;
+    }
 }
-#order-track-dialog.col-md-8 {
-    padding-top: 66vw;
+
+@media screen and (max-width: 720px) {
+    #order-track-dialog {
+        padding-top: 66vw;
+    }
 }
-#order-track-dialog.col-lg-6 {
-    padding-top: 40vw;
+
+@media screen and (min-width: 721px) {
+    #order-track-dialog {
+        padding-top: 40vw;
+    }
 }
+
 #order-track-map {
     position:absolute;
     top: 0; 
