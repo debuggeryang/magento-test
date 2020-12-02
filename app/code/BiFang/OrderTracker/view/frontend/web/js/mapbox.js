@@ -105,7 +105,7 @@ define([
         function loadRoute(map, routePoints) {
           $.ajax({
             url: 'https://api.mapbox.com/directions/v5/mapbox/' + 
-                    (config.dispatchNow ? 'driving-traffic/' : 'drivings/') +
+                    (config.dispatchNow ? 'driving-traffic/' : 'driving/') +
                     routePoints[0].coordinates.toString() + ';' + routePoints[1].coordinates.toString() +
                     '?geometries=geojson' +
                     '&access_token=' + config.accessToken,
@@ -162,7 +162,7 @@ define([
             $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.');
           });
         }
-        
+
         function loadTraffic(map) {
           map.addSource('trafficSource', {
             type: 'vector',
