@@ -50,7 +50,7 @@ define([
               container: 'order-track-map',
               style: 'mapbox://styles/mapbox/streets-v11', 
               center: center, 
-              zoom: 3
+              zoom: 5
           });
 
 
@@ -70,6 +70,7 @@ define([
               routePoint.marker = new mapboxgl.Marker(el)
                   .setLngLat(routePoint.coordinates)
                   .addTo(map);
+              
           });
 
           setTimeout(() => {
@@ -77,7 +78,7 @@ define([
               loadRoute(map, routePoints);
               if (config.dispatchNow) loadTraffic(map);
             });
-          },2000);
+          },500);
           
         }
         
@@ -152,7 +153,7 @@ define([
               var bounds = coordinates.reduce(function (bounds, coord) {
                 return bounds.extend(coord);
                 }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-              map.fitBounds(bounds, { padding: 50});
+              map.fitBounds(bounds, { padding: 60});
 
             } else {
               $('#alt-msg').addClass('err-msg');
