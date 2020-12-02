@@ -1,5 +1,7 @@
-.order-track-wrapper {
+.order-track-wrapper.row {
     margin-top: 2em;
+    margin-left: 2em;
+    margin-right: 2em;
 }
 #order-track-dialog {
     padding-top: 50vw;

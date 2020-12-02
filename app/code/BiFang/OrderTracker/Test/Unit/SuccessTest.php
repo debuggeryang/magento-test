@@ -122,4 +122,5 @@ class SuccessTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Expected Result', $this->block->getContinueUrl());
     }
+
 }
