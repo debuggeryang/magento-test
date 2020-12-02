@@ -50,7 +50,7 @@ define([
               container: 'order-track-map',
               style: 'mapbox://styles/mapbox/streets-v11', 
               center: center, 
-              zoom: 12
+              zoom: 5
           });
 
 
@@ -70,6 +70,7 @@ define([
               routePoint.marker = new mapboxgl.Marker(el)
                   .setLngLat(routePoint.coordinates)
                   .addTo(map);
+              
           });
 
           setTimeout(() => {
@@ -77,7 +78,7 @@ define([
               loadRoute(map, routePoints);
               if (config.dispatchNow) loadTraffic(map);
             });
-          },2000);
+          },500);
           
         }
         
@@ -103,6 +104,7 @@ define([
 
 
         function loadRoute(map, routePoints) {
+        
           $.ajax({
             url: 'https://api.mapbox.com/directions/v5/mapbox/' + 
                     (config.dispatchNow ? 'driving-traffic/' : 'driving/') +
@@ -151,13 +153,14 @@ define([
               var bounds = coordinates.reduce(function (bounds, coord) {
                 return bounds.extend(coord);
                 }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-              map.fitBounds(bounds, { padding: 50});
+              map.fitBounds(bounds, { padding: 60});
 
             } else {
               $('#alt-msg').addClass('err-msg');
               $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.' + (data.code ? (' Error Code: ' + data.code) : ''));
             }
           }).fail((error) => {
+            console.log(error);
             $('#alt-msg').addClass('err-msg');
             $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.');
           });

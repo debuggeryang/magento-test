@@ -193,7 +193,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
         } elseif ($cutoffHour <= $currentTime->format('H')) {
             $dispatchTime = new \DateTime("tomorrow", $timeZone);
             $dispatchTime->modify('+8 hours');
-        } elseif ($currentTime->format('H') < 8) {
+        } elseif ($currentTime->format('H') < 6) {
             $dispatchTime = $currentTime;
             $dispatchTime->setTime(8, 0, 0);
         } else {
