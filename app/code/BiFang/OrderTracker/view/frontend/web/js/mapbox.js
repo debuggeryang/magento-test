@@ -68,22 +68,30 @@ define([
           setTimeout(() => {
             map.on('load', () => {
               $.ajax({
-                  url: 'https://api.mapbox.com/directions/v5/mapbox/driving/' + 
+                  url: 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + 
                           routePoints[0].coordinates.toString() +
                           ';' +
                           routePoints[1].coordinates.toString() +
                           '?geometries=geojson' +
                           '&access_token=' + config.accessToken,
+                          // '&depart_at=' + config.dispatchTime.substring(0,16),
                   type: 'GET'
               }).done((data) => {
                   if (data.code && data.code === 'Ok') {
-                      console.log(data.routes[0]);
+                      console.log(data);
+                      let dispatchTime = new Date(config.dispatchTime);
+                      const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+                      dispatchTime.setSeconds(dispatchTime.getSeconds() + data.routes[0].duration);
+                      $('#eta').html(dispatchTime.toLocaleDateString('en-AU', dateOptions));
+                      let distanceKm = Math.ceil(data.routes[0].distance / 100) / 10;
+                      $('#distance').html(distanceKm.toFixed(1) + 'km');
                       loadRoute(map, data.routes[0]);
                   } else {
                       console.log('Can\'t get any route.' + (data.code ? (' Error Code: ' + data.code) : ''));
                   }
               }).fail((error) => {
                   console.log(error);
+                  console.log(error.responseJSON.message);
               });
             });
           },2000);
@@ -144,7 +152,7 @@ define([
             var bounds = coordinates.reduce(function (bounds, coord) {
               return bounds.extend(coord);
               }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-            map.fitBounds(bounds, { padding: 30});
+            map.fitBounds(bounds, { padding: 50});
         }
 
     }

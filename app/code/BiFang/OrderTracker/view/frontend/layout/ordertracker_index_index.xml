@@ -8,6 +8,7 @@
 
         <css src="BiFang_OrderTracker/css/custom.css" rel="stylesheet" type="text/css" media="all"/>
         <css src="BiFang_OrderTracker/css/mapbox-gl.css" rel="stylesheet" type="text/css" media="all"/>
+        <css src="BiFang_OrderTracker/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all"/>
       </head>
     <referenceContainer name="content">
         <block template="orderTracker.phtml" 
