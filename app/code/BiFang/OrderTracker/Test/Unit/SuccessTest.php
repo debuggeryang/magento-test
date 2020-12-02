@@ -113,55 +113,6 @@ class SuccessTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('AdditionalInfoHtml', $this->block->getAdditionalInfoHtml());
     }
 
-    /**
-     * @dataProvider invisibleStatusesProvider
-     *
-     * @param array $invisibleStatuses
-     * @param bool $expectedResult
-     */
-    public function testToHtmlOrderVisibleOnFront(array $invisibleStatuses, $expectedResult)
-    {
-        $orderId = 5;
-        $realOrderId = 100003332;
-        $status = Order::STATE_PENDING_PAYMENT;
-
-        $order = $this->getMockBuilder(\Magento\Sales\Model\Order::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->checkoutSession->expects($this->once())
-            ->method('getLastRealOrder')
-            ->willReturn($order);
-        $order->expects($this->atLeastOnce())
-            ->method('getEntityId')
-            ->willReturn($orderId);
-        $order->expects($this->atLeastOnce())
-            ->method('getIncrementId')
-            ->willReturn($realOrderId);
-        $order->expects($this->atLeastOnce())
-            ->method('getStatus')
-            ->willReturn($status);
-
-        $this->orderConfig->expects($this->any())
-            ->method('getInvisibleOnFrontStatuses')
-            ->willReturn($invisibleStatuses);
-
-        $this->block->toHtml();
-
-        $this->assertEquals($expectedResult, $this->block->getIsOrderVisible());
-    }
-
-    /**
-     * @return array
-     */
-    public function invisibleStatusesProvider()
-    {
-        return [
-            [[Order::STATE_PENDING_PAYMENT, 'status2'],  false],
-            [['status1', 'status2'], true]
-        ];
-    }
-
     public function testGetContinueUrl()
     {
         $storeMock = $this->createMock(\Magento\Store\Model\Store::class);

@@ -1,3 +1,7 @@
+
+<?php /** @var $block \BiFang\OrderTracker\Block\Onepage\Success|\BiFang\OrderTracker\Block\Main */ ?>
+<?php $orderTrackData = $block->getOrderTrackData(); ?>
+
 <div class="order-track-wrapper">
     <div id="order-track-dialog">
         <div id="order-track-map"></div>
@@ -6,9 +10,11 @@
       {
         "#order-track-dialog": {
           "mapbox": {
-            "accessToken": "pk.eyJ1IjoiZGVidWdnZXJ5YW5nIiwiYSI6ImNraTA4ZmpzOTFiYmIycXRob2wxajlwOW8ifQ.8qdYPNJ_YnIExDIdleL5Eg",
-            "destination": "3-7 Souter St, Beaconsfield VIC 3807 Australia",
-            "from": "1341 Dandenong Road Chadstone VIC 3148 Australia"
+            "trackEnabled": "<?php echo $orderTrackData['enabled'];?>",
+            "accessToken": "<?php echo $orderTrackData['token'];?>",
+            "destination": "<?php echo $orderTrackData['shippingAddress'];?>",
+            "from": "<?php echo $orderTrackData['originAddress'];?>",
+            "cutoffTime": "<?php echo $orderTrackData['cutoffTime'];?>"
           }
         }
       }
