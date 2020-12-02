@@ -68,5 +68,7 @@ atlassian*
 !/generated/.htaccess
 .DS_Store
 
-/app/code/**
+/app/bootstrap.php
+/app/code/Magento/**
+/app/code/BiFang/TestSuite/**
 /pestle.phar

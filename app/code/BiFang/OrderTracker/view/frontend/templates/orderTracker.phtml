@@ -1,0 +1,23 @@
+
+<?php /** @var $block \BiFang\OrderTracker\Block\Onepage\Success|\BiFang\OrderTracker\Block\Main */ ?>
+<?php $orderTrackData = $block->getOrderTrackData(); ?>
+
+<div class="order-track-wrapper">
+    <div id="order-track-dialog">
+        <div id="order-track-map"></div>
+    </div>
+    <script type="text/x-magento-init">
+      {
+        "#order-track-dialog": {
+          "mapbox": {
+            "trackEnabled": "<?php echo $orderTrackData['enabled'];?>",
+            "accessToken": "<?php echo $orderTrackData['token'];?>",
+            "destination": "<?php echo $orderTrackData['shippingAddress'];?>",
+            "from": "<?php echo $orderTrackData['originAddress'];?>",
+            "cutoffTime": "<?php echo $orderTrackData['cutoffTime'];?>"
+          }
+        }
+      }
+    </script>
+
+</div>
