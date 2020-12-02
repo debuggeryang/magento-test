@@ -1,18 +1,18 @@
 
-<?php /** @var $block \BiFang\OrderTracker\Block\Onepage\Success|\BiFang\OrderTracker\Block\Main */ ?>
+<?php
+/**
+ * Magento Test
+ * @var $block \BiFang\OrderTracker\Block\Onepage\Success|\BiFang\OrderTracker\Block\Main
+ */
+?>
 <?php $orderTrackData = $block->getOrderTrackData(); ?>
 
+<div class="order-track-title">
+  <h5>Your order is ready and on its way!</h5>
+  <h5 id="alt-msg"></h5>
+</div>
 <div class="order-track-wrapper row">
-    <div id="order-track-details" class="col-12 col-md-4" >
-      <h6>Your order is on the way!</h6>
-      <h6><?php echo $orderTrackData['dispatchTime'];?></h6>
-      <h6>Delivery expected:</h6>
-      <p id="eta"><?php echo $orderTrackData['dispatchTime'];?></p>
-      <h6>Distance:</h6>
-      <p id="distance"></p>
-
-    </div>
-    <div id="order-track-dialog" class="col-12 col-md-8">
+    <div id="order-track-dialog" class="col-12 col-md-8 col-lg-6">
         <div id="order-track-map" ></div>
     </div>
     <script type="text/x-magento-init">
@@ -23,12 +23,12 @@
             "accessToken": "<?php echo $orderTrackData['token'];?>",
             "destination": "<?php echo $orderTrackData['shippingAddress'];?>",
             "from": "<?php echo $orderTrackData['originAddress'];?>",
-            "dispatchTime": "<?php echo $orderTrackData['dispatchTime'];?>"
+            "dispatchTime": "<?php echo $orderTrackData['dispatchTime'];?>",
+            "dispatchNow": "<?php echo $orderTrackData['dispatchNow'];?>"
           }
         }
       }
     </script>
-
 </div>
 
 <script>

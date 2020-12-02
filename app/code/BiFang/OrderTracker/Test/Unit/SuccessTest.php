@@ -1,6 +1,7 @@
 <?php
-
-
+/**
+ * Magento Test
+ */
 namespace BiFang\OrderTracker\Test\Unit;
 
 use Magento\Sales\Model\Order;
@@ -123,4 +124,8 @@ class SuccessTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Expected Result', $this->block->getContinueUrl());
     }
 
+    public function testGetOrderTrackData()
+    {
+        $this->assertArrayHasKey('enabled', $this->block->getOrderTrackData());
+    }
 }
