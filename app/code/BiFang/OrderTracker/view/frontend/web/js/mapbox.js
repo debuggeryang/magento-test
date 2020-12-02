@@ -50,7 +50,7 @@ define([
               container: 'order-track-map',
               style: 'mapbox://styles/mapbox/streets-v11', 
               center: center, 
-              zoom: 12
+              zoom: 3
           });
 
 
@@ -103,6 +103,7 @@ define([
 
 
         function loadRoute(map, routePoints) {
+        
           $.ajax({
             url: 'https://api.mapbox.com/directions/v5/mapbox/' + 
                     (config.dispatchNow ? 'driving-traffic/' : 'driving/') +
@@ -158,6 +159,7 @@ define([
               $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.' + (data.code ? (' Error Code: ' + data.code) : ''));
             }
           }).fail((error) => {
+            console.log(error);
             $('#alt-msg').addClass('err-msg');
             $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.');
           });
