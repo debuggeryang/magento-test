@@ -36,20 +36,20 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
     protected $countryFactory;
 
         /**
-     * @var \Magento\Directory\Model\RegionFactory
-     */
+         * @var \Magento\Directory\Model\RegionFactory
+         */
     protected $regionFactory;
 
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Sales\Model\Order\Config $orderConfig
-     * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Magento\Framework\View\Element\Template\Context   $context
+     * @param \Magento\Checkout\Model\Session                    $checkoutSession
+     * @param \Magento\Sales\Model\Order\Config                  $orderConfig
+     * @param \Magento\Framework\App\Http\Context                $httpContext
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Directory\Model\CountryFactory $countryFactory
-     * @param \Magento\Directory\Model\RegionFactory $regionFactory
-     * @param array $data
+     * @param \Magento\Directory\Model\CountryFactory            $countryFactory
+     * @param \Magento\Directory\Model\RegionFactory             $regionFactory
+     * @param array                                              $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -127,7 +127,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
     /**
      * Is order visible
      *
-     * @param Order $order
+     * @param  Order $order
      * @return bool
      */
     protected function isVisible(Order $order)
@@ -141,7 +141,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
     /**
      * Can view order
      *
-     * @param Order $order
+     * @param  Order $order
      * @return bool
      */
     protected function canViewOrder(Order $order)

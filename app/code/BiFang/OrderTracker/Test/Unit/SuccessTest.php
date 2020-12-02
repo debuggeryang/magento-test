@@ -7,7 +7,8 @@ use Magento\Sales\Model\Order;
 
 /**
  * Class SuccessTest
- * @package BiFang\OrderTracker\Block\Onepage
+ *
+ * @package                                        BiFang\OrderTracker\Block\Onepage
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SuccessTest extends \PHPUnit\Framework\TestCase

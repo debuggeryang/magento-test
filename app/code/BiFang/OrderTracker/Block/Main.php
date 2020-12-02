@@ -23,7 +23,8 @@ class Main extends \Magento\Framework\View\Element\Template
      *
      * @return array
      */
-    public function getOrderTrackData() {
+    public function getOrderTrackData()
+    {
         return array (
             'enabled' => '1',
             'cutoffTime' => '15,00,00',
