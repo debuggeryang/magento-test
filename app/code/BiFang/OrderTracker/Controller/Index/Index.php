@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * Magento Test
+ */
 namespace BiFang\OrderTracker\Controller\Index;
 
 /**
- * Undocumented class
+ * Index class
+ * This controller is only for testing purpose.
  */
 class Index extends \Magento\Framework\App\Action\Action
 {

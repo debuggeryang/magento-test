@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Magento Test
+ */
 namespace BiFang\OrderTracker\Block\Onepage;
 
 use Magento\Customer\Model\Context;
@@ -134,7 +136,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
     }
 
     /**
-     * Get origin address, mapbox token and cut-off time
+     * Get origin address, mapbox token and dispatch time
      *
      * @return void
      */
@@ -146,6 +148,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
         $orderTrackData = [
             'enabled' => $enableOrderTracker,
             'dipsatchTime' => '',
+            'dispatchNow' => false,
             'token' => '',
             'originAddress' => '',
             'shippingAddress' => ''
@@ -179,7 +182,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
             $shippingAddressPostcode . ' ' .
             $shippingAddressCountryName;
         
-        $cutoffHour = intval(explode(',',$this->scopeConfig->getValue('shipping/ordertracker/cut_off'))[0]);
+        $cutoffHour = intval(explode(',', $this->scopeConfig->getValue('shipping/ordertracker/cut_off'))[0]);
         $timeZone = new \DateTimeZone($this->scopeConfig->getValue('general/locale/timezone'));
         $currentTime = new \DateTime("now", $timeZone);
         $currentDay = $currentTime->format('l');
@@ -192,9 +195,10 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
             $dispatchTime->modify('+8 hours');
         } elseif ($currentTime->format('H') < 8) {
             $dispatchTime = $currentTime;
-            $dispatchTime->setTime(8,0,0);
+            $dispatchTime->setTime(8, 0, 0);
         } else {
             $dispatchTime = $currentTime;
+            $orderTrackData['dispatchNow'] = true;
         }
         $orderTrackData['dispatchTime'] = $dispatchTime->format('c');
         return $orderTrackData;

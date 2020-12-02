@@ -6,8 +6,8 @@ define([
     $.ajaxSetup({'cache':true});
 
     return function(config, element) {
-        var errMsg = '';
-        // mapboxgl.accessToken = config.accessToken;
+        var altMsg = 'You can find more parcel details in your order record.';
+        var altDisplay = false;
 
         const routePoints = [
           { class: 'carrier', coordinates: [] },
@@ -17,12 +17,12 @@ define([
 
         loadPoint(config.from, 
           (coordinates) => routePoints[0].coordinates = coordinates, 
-          () => errMsg = 'Sorry, we cannot locate the store address.'
+          () => altDisplay = true
         );
 
         loadPoint(config.destination, 
           (coordinates) => routePoints[1].coordinates = coordinates, 
-          () => errMsg = 'Sorry, we cannot locate your address.'
+          () => altDisplay = true
         );
 
         var waitRoutePoints = setInterval(() => {
@@ -30,8 +30,8 @@ define([
             loadMap();
             clearInterval(waitRoutePoints);
           }
-          if (errMsg) {
-            console.log(errMsg);
+          if (altDisplay) {
+            $('#alt-msg').html(altMsg);
             clearInterval(waitRoutePoints);
           }
         }, 500);
@@ -45,54 +45,37 @@ define([
               (routePoints[0].coordinates[1] + routePoints[1].coordinates[1]) / 2
           ];
           mapboxgl.accessToken = config.accessToken;
-          try {
-            var map = new mapboxgl.Map({
-                container: 'order-track-map',
-                style: 'mapbox://styles/mapbox/streets-v11', 
-                center: center, 
-                zoom: 12
-            });
-          } catch (error) {
-            console.log(error);
-            return;
-          }
+
+          var map = new mapboxgl.Map({
+              container: 'order-track-map',
+              style: 'mapbox://styles/mapbox/streets-v11', 
+              center: center, 
+              zoom: 12
+          });
+
+
+          map.addControl(new mapboxgl.NavigationControl());
+          map.addControl(
+            new mapboxgl.GeolocateControl({
+              positionOptions: {
+                enableHighAccuracy: true
+              },
+              trackUserLocation: true
+            })
+          );
 
           routePoints.forEach((routePoint) => {
               let el = document.createElement('div');
               el.className = routePoint.class;
-              new mapboxgl.Marker(el)
+              routePoint.marker = new mapboxgl.Marker(el)
                   .setLngLat(routePoint.coordinates)
                   .addTo(map);
           });
 
           setTimeout(() => {
             map.on('load', () => {
-              $.ajax({
-                  url: 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + 
-                          routePoints[0].coordinates.toString() +
-                          ';' +
-                          routePoints[1].coordinates.toString() +
-                          '?geometries=geojson' +
-                          '&access_token=' + config.accessToken,
-                          // '&depart_at=' + config.dispatchTime.substring(0,16),
-                  type: 'GET'
-              }).done((data) => {
-                  if (data.code && data.code === 'Ok') {
-                      console.log(data);
-                      let dispatchTime = new Date(config.dispatchTime);
-                      const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-                      dispatchTime.setSeconds(dispatchTime.getSeconds() + data.routes[0].duration);
-                      $('#eta').html(dispatchTime.toLocaleDateString('en-AU', dateOptions));
-                      let distanceKm = Math.ceil(data.routes[0].distance / 100) / 10;
-                      $('#distance').html(distanceKm.toFixed(1) + 'km');
-                      loadRoute(map, data.routes[0]);
-                  } else {
-                      console.log('Can\'t get any route.' + (data.code ? (' Error Code: ' + data.code) : ''));
-                  }
-              }).fail((error) => {
-                  console.log(error);
-                  console.log(error.responseJSON.message);
-              });
+              loadRoute(map, routePoints);
+              if (config.dispatchNow) loadTraffic(map);
             });
           },2000);
           
@@ -118,42 +101,124 @@ define([
           });
         }
 
-        function loadRoute(map, route) {
-            let geojson = {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'LineString',
-                  coordinates: route.geometry.coordinates
-                }
-            };
-            if (map.getSource('route')) {
-                map.getSource('route').setData(geojson);
+
+        function loadRoute(map, routePoints) {
+          $.ajax({
+            url: 'https://api.mapbox.com/directions/v5/mapbox/' + 
+                    (config.dispatchNow ? 'driving-traffic/' : 'drivings/') +
+                    routePoints[0].coordinates.toString() + ';' + routePoints[1].coordinates.toString() +
+                    '?geometries=geojson' +
+                    '&access_token=' + config.accessToken,
+            type: 'GET'
+          }).done((data) => {
+            if (data.code && data.code === 'Ok') {
+                let dispatchTime = new Date(config.dispatchTime);
+                dispatchTime.setSeconds(dispatchTime.getSeconds() + data.routes[0].duration);
+                let eta = dispatchTime.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' });
+                let distance = (Math.ceil(data.routes[0].distance / 100) / 10).toFixed(1) + 'km';
+                routePoints[1].marker.setPopup(new mapboxgl.Popup({offset: 25}).setText('Your parcel destination'));
+                routePoints[0].marker.setPopup(new mapboxgl.Popup({offset: 25}).setText('Within ' + distance + '. Estimated to arrive on ' + eta + '.'));
+                let geojson = {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: data.routes[0].geometry.coordinates
+                  }
+              };
+              if (map.getSource('route')) {
+                  map.getSource('route').setData(geojson);
+              } else {
+                  map.addLayer({
+                      id: 'route',
+                      type: 'line',
+                      source: {
+                        type: 'geojson',
+                        data: geojson,
+                      },
+                      layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                      },
+                      paint: {
+                        'line-color': '#172dd3',
+                        'line-width': 5,
+                        'line-opacity': 0.75
+                      }
+                  });
+              }
+              var coordinates = data.routes[0].geometry.coordinates;
+              var bounds = coordinates.reduce(function (bounds, coord) {
+                return bounds.extend(coord);
+                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+              map.fitBounds(bounds, { padding: 50});
+
             } else {
-                map.addLayer({
-                    id: 'route',
-                    type: 'line',
-                    source: {
-                      type: 'geojson',
-                      data: geojson,
-                    },
-                    layout: {
-                      'line-join': 'round',
-                      'line-cap': 'round'
-                    },
-                    paint: {
-                      'line-color': '#3887be',
-                      'line-width': 5,
-                      'line-opacity': 0.75
-                    }
-                });
+              $('#alt-msg').addClass('err-msg');
+              $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.' + (data.code ? (' Error Code: ' + data.code) : ''));
             }
-            var coordinates = route.geometry.coordinates;
-            var bounds = coordinates.reduce(function (bounds, coord) {
-              return bounds.extend(coord);
-              }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-            map.fitBounds(bounds, { padding: 50});
+          }).fail((error) => {
+            $('#alt-msg').addClass('err-msg');
+            $("#alt-msg").html('Sorry, we can\'t locate your order on the map, but we have sent you an email with more order details.');
+          });
         }
+        
+        function loadTraffic(map) {
+          map.addSource('trafficSource', {
+            type: 'vector',
+            url: 'mapbox://mapbox.mapbox-traffic-v1'
+          });
+          map.addLayer({
+            "id": "traffic",
+            "source": "trafficSource",
+            "source-layer": "traffic",
+            "type": "line",
+              "paint": {
+                        "line-width": 1.5,
+                          "line-color": [
+                            "case",
+                            [
+                              "==",
+                              "low",
+                              [
+                                "get",
+                                "congestion"
+                              ]
+                            ],
+                            "#65c51f",
+                            [
+                              "==",
+                              "moderate",
+                              [
+                                "get",
+                                "congestion"
+                              ]
+                            ],
+                            "#e5fb42",
+                            [
+                              "==",
+                              "heavy",
+                              [
+                                "get",
+                                "congestion"
+                              ]
+                            ],
+                            "#ee8d00",
+                            [
+                              "==",
+                              "severe",
+                              [
+                                "get",
+                                "congestion"
+                              ]
+                            ],
+                            "#ac0550",
+                            "#000000"
+                          ]
+            }
+          });
+        }
+
 
     }
 });

@@ -1,4 +1,4 @@
-.order-track-wrapper.row {
+.order-track-title, .order-track-wrapper.row {
     margin-top: 2em;
     margin-left: 2em;
     margin-right: 2em;
@@ -17,16 +17,31 @@
 .carrier {
     background: url('../images/carrier.png');
     background-size: cover;
-    width: 2em;
-    height: 2em;
+    width: 3em;
+    height: 3em;
     border-radius: 50%;
     cursor: pointer;
 }
 .destination {
     background: url('../images/marker.png');
     background-size: cover;
-    width: 2em;
-    height: 2em;
+    width: 3em;
+    height: 3em;
     border-radius: 50%;
     cursor: pointer;
+}
+#order-track-map .mapboxgl-popup-close-button {
+    padding: 0 5px;
+}
+#order-track-map .mapboxgl-popup-content {
+    padding: 15px 15px 15px 15px;
+}
+.order-track-wrapper .col-12,
+.order-track-wrapper .col-md-8,
+.order-track-wrapper .col-lg-6 {
+    padding-left: 0;
+}
+.err-msg {
+    color: #F00;
+    font-weight: 600;
 }
